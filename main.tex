@@ -1,22 +1,225 @@
-\documentclass{classes/report}
+\documentclass[unicode,12pt,aspectratio=169, dvipdfmx]{beamer}
+
+\usepackage{bxdpx-beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}%既定をゴシック体に
+
+\usepackage{bm}
+\usepackage{comment} % 引用元のコメントアウトに使用
+
+% タイトル、著者、日付の情報
+
+\title{介護における音響HARと連合学習を用いた異常検知}
+\author{発表者名（竹本志恩様の例に倣い、発表者名はプレースホルダーとしました）}
+\date{\today}
+\institute{所属機関名（INIAD様の例に倣い、所属機関名はプレースホルダーとしました）}
+\subject{研究報告 / 輪読} % 対話履歴や例示より適切なものを選択
+
+\AtBeginSection[]{
+\frame{\frametitle{目次}\tableofcontents[currentsection, hideallsubsections]}
+}
 
 \begin{document}
 
-\pagenumbering{roman}
-\subfile{sections/title}
-\newpage
+\frame{\maketitle}
 
-\tableofcontents
-\clearpage
+\section{はじめに：背景と目的}
+\begin{frame}{\insertsectionhead}
+    \begin{itemize}
+        \item \textbf{増大する高齢者ケアの必要性}
+        \begin{itemize}
+            \item 世界的な高齢化の進行に伴い、遠隔・継続的な健康モニタリングの需要が増大。
+            \item 特に単身高齢者の安全確保とタイムリーな介入が課題。
+        \end{itemize}
+        \item \textbf{従来のモニタリング手法の課題}
+        \begin{itemize}
+            \item プライバシーへの配慮や、重要な事象を捉える上での限界がある。
+            \item カメラベースのシステムはプライバシー侵害の懸念が大きい。
+        \end{itemize}
+        \item \textbf{音響HARの可能性}
+        \begin{itemize}
+            \item \textbf{非侵入的}なモニタリング手段として有望視されている。
+            \item 環境音から活動、安全、健康状態に関する豊富な情報を得られる。
+        \end{itemize}
+        \item \textbf{プライバシー保護AIとしての連合学習(FL)}
+        \begin{itemize}
+            \item 生の機密性の高いデータを共有せずにモデルを訓練する手法。
+            \item 分散データソース（各家庭やデバイス）で協調学習を行う。
+            \item 音響データのような機密情報に適している。
+        \end{itemize}
+        \item \textbf{本発表の目的}
+        \begin{itemize}
+            \item 介護における音響HARとFLを組み合わせた異常検知システムの可能性を探る。
+            \item 関連技術、課題、将来展望を整理・考察する。
+        \end{itemize}
+    \end{itemize}
+\end{frame}
 
-\pagenumbering{arabic}
+\section{関連研究と背景}
+\begin{frame}{\insertsectionhead}
+    \begin{itemize}
+        \item \textbf{人間行動認識(HAR)の概要}
+        \begin{itemize}
+            \item 生センサー入力から人間の活動に関する高レベルの知識を学習する。
+            \item ウェアラブル、環境センサー、ビデオなど多様なモダリティが利用される。
+        \end{itemize}
+        \item \textbf{従来のHARにおける課題}
+        \begin{itemize}
+            \item ヒューリスティックな手動特徴抽出に依存し、ドメイン知識が必要な場合がある。
+            \item 浅い特徴しか学習できない場合がある。
+        \end{itemize}
+        \item \textbf{連合学習(FL)の基本}
+        \begin{itemize}
+            \item 分散されたクライアントデータで、モデル更新の集約を通じてグローバルモデルを学習。
+            \item データの集中収集に伴う多くのプライバシーリスクとコストを軽減。
+            \item Federated Averaging (FedAvg)は代表的なアルゴリズム。
+        \end{itemize}
+        \item \textbf{HARにおけるFLの必要性}
+        \begin{itemize}
+            \item HARデータはユーザーや環境によって\textbf{非IID}（統計的に不均一）かつ\textbf{不均衡}になりやすい。
+            \item データのプライバシー保護が重要（特に自宅でのモニタリングなど）。
+            \item 計算・通信リソースが限定的なエッジデバイスでの展開が求められる。
+        \end{itemize}
+        \item \textbf{関連サーベイ}
+        \begin{itemize}
+            \item HARに関する深層学習サーベイ。
+            \item FLに関するサーベイ。
+            \item FL in Human Sensingに関するサーベイ。
+            \item AALにおける行動認識サーベイ。
+            \item 音響・ビデオHARサーベイ。
+            \item FLを用いたHARに関するサーベイや研究例。
+        \end{itemize}
+    \end{itemize}
+\end{frame}
 
-\subfile{sections/abstract}
-\newpage
+\section{技術要素と手法}
+\begin{frame}{\insertsectionhead}
+    \begin{itemize}
+        \item \textbf{介護における重要な音響イベント}
+        \begin{itemize}
+            \item \textbf{緊急事態の直接的指標}: 転倒音、悲鳴・叫び声、助けを求める言葉、異常な呼吸音。
+            \item \textbf{苦痛・不快感}: うめき声・呻き声、泣き声、持続的な咳。
+            \item \textbf{危険を示唆する環境音}: ガラス破損音、煙/火災警報、長時間放置された流水音。
+            \item \textbf{日常活動からの逸脱}: 異常な時間帯の音、通常と異なるパターンの音。
+        \end{itemize}
+        \item \textbf{音響特徴抽出}
+        \begin{itemize}
+            \item プライバシー保護のため、オンデバイスでの抽出が不可欠。
+            \item メル周波数ケプストラム係数 (MFCCs): 音声/音響処理で一般的、オンデバイスに適応。
+            \item メルスペクトログラム: CNN入力に適し一般的だが、MFCCより情報漏洩の懸念があるとの指摘も。
+        \end{itemize}
+        \item \textbf{FLアルゴリズム}
+        \begin{itemize}
+            \item FedAvg: 基本的なモデル平均化手法。
+            \item パーソナライズFL(pFL): 個別環境への適応を目指す。Meta-HARやFedDLなどの研究例がある。
+            \item ハイブリッドモデル: LSTM-GRU、CNN-LSTMなどシーケンシャルデータに適した構造がHARで利用される。
+            \item 連合分割学習(FSL): モデルをクライアント/サーバーに分割し、エッジ負荷軽減とプライバシー保護を図る。
+        \end{itemize}
+        \item \textbf{プライバシー強化技術(PETs)}
+        \begin{itemize}
+            \item FLだけでは不十分な場合がある。
+            \item 差分プライバシー(DP): ノイズ付加で個人の寄与をマスク。
+            \item セキュアアグリゲーション(SA): 集約プロセスを秘匿。
+            \item 準同型暗号(HE): 暗号化したまま計算可能。
+            \item PETsにはモデル有用性、計算/通信コストとのトレードオフが存在。
+            \item \textbf{音響特徴の選択自体がプライバシーに影響}しうる。
+        \end{itemize}
+    \end{itemize}
+\end{frame}
 
-\subfile{sections/main_issue}
-\newpage
+\section{課題}
+\begin{frame}{\insertsectionhead}
+    \begin{itemize}
+        \item \textbf{データに関する課題}
+        \begin{itemize}
+            \item \textbf{実世界の緊急イベントデータの希少性}: シミュレーション/実験データへの依存が高い。
+            \item \textbf{アノテーションの質と粒度}: 複雑な行動や連続的なイベントのアノテーションが困難。
+            \item \textbf{データ不均衡}: 緊急イベントは稀なため、データセットが偏る。
+            \item \textbf{データ異質性(Non-IID)とドメインシフト}: 環境音響特性やユーザー行動の多様性が課題。
+            \item \textbf{データ不足}: FLのための大規模で多様な実環境データセットが不足。
+        \end{itemize}
+        \item \textbf{技術的な課題}
+        \begin{itemize}
+            \item \textbf{ノイズ耐性}: 実環境はノイズが多く、関連音の識別が必要。
+            \item \textbf{計算・通信リソース}: エッジデバイスの制限、モデル更新の通信コスト。ローカル計算量の増加は通信効率化に寄与するが、デバイス性能とのバランスが必要。
+            \item \textbf{リアルタイム処理}: 緊急検知には低遅延が必須。
+        \end{itemize}
+        \item \textbf{プライバシー・セキュリティの課題}
+        \begin{itemize}
+            \item \textbf{勾配漏洩攻撃}: 共有される勾配からの機密情報漏洩リスク。
+            \item PETs導入によるオーバーヘッド（計算、通信、モデル精度）。
+            \item 悪意ある参加者への対策（ポイズニング攻撃など）。
+        \end{itemize}
+        \item \textbf{倫理・ユーザー受容性の課題}
+        \begin{itemize}
+            \item カメラ・マイクロフォンへの抵抗感。
+            \item 透明性・説明可能性(XAI)の確保。深層学習の「ブラックボックス」性との衝突。
+            \item 公平性、説明責任、安全性（見逃し・誤報防止）。
+            \item 利用者の自律性と同意取得。
+        \end{itemize}
+    \end{itemize}
+\end{frame}
 
-\subfile{sections/references}
+\section{将来展望}
+\begin{frame}{\insertsectionhead}
+    \begin{itemize}
+        \item \textbf{データセットの拡充}
+        \begin{itemize}
+            \item 実世界の緊急事態を反映した、多様で高品質なアノテーション付きデータセットの必要性。
+            \item 文脈情報を重視したアノテーション手法の開発。
+            \item 合成データ生成技術の活用。
+        \end{itemize}
+        \item \textbf{FLアルゴリズムとPETsの進化}
+        \begin{itemize}
+            \item 音響データに特化した効率的なPETsの研究。
+            \item プライバシーとモデル有用性のバランス最適化。
+            \item 非IIDデータやデータ不均衡に対する頑健なFL/pFL手法の開発。
+            \item リソース制約のあるデバイス向けFLの最適化。
+        \end{itemize}
+        \item \textbf{透明性・説明可能性(XAI)}
+        \begin{itemize}
+            \item 音響SEDモデルのためのXAI技術の研究・統合。
+            \item 解釈可能なモデルの選択。
+        \end{itemize}
+        \item \textbf{マルチモーダル融合}
+        \begin{itemize}
+            \item 音響データを他のセンサー（ウェアラブル、環境センサーなど）と融合し、精度と頑健性を向上。ADMarkerはマルチモーダルなシステムの例。
+        \end{itemize}
+        \item \textbf{倫理的配慮の実践}
+        \begin{itemize}
+            \item プライバシー・バイ・デザイン、利用者同意、公平性、安全性を設計初期から組み込む。
+            \item アラン・チューリング研究所やIEEE P7000シリーズのようなフレームワークの活用。
+        \end{itemize}
+        \item \textbf{システムの実環境展開}
+        \begin{itemize}
+            \item 技術的側面と、ユーザビリティ、プライバシー、倫理、実用性のバランスを考慮した戦略が必要。
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\section{結論}
+\begin{frame}{\insertsectionhead}
+    \begin{itemize}
+        \item 音響HARとFLは、高齢者介護におけるプライバシー保護異常検知システムの構築において\textbf{大きな可能性}を持つ。
+        \item 転倒、苦痛の音声、異常呼吸音など\textbf{緊急性の高い音響イベントの正確な認識}が重要。
+        \item 成功には、適切な\textbf{音響特徴抽出}、\textbf{FLアルゴリズム}、そして\textbf{PETs}の適用が不可欠だが、トレードオフの考慮が必要。
+        \item \textbf{実世界データの不足}、\textbf{非IID性}、\textbf{リソース制約}、\textbf{倫理的課題}など、克服すべき重要な課題が多数存在する。
+        \item 今後の研究は、\textbf{データ拡充}、\textbf{FL/PETsの最適化}、\textbf{XAI}、\textbf{マルチモーダル融合}、そして\textbf{倫理的配慮}を組み込んだ実環境展開戦略に焦点を当てる必要がある。
+        \item これらの課題への取り組みを通じて、FLと音響HARは高齢者の安全とQOL向上に貢献できると期待される。
+    \end{itemize}
+\end{frame}
+
+\begin{comment}
+% 参考文献リストは発表資料の例には含まれていなかったため省略しますが、必要に応じて追加してください。
+% 例:
+%\begin{frame}{参考文献}
+%    \nocite{*} % 文献リストにすべての参考文献を含める
+%    \bibliographystyle{plain} % 文献スタイルの選択 (apa, ieee, etc. に変更可能)
+%    \bibliography{references} % 参考文献リストの.bibファイル名を指定
+%\end{frame}
+\end{comment}
 
 \end{document}
+```
