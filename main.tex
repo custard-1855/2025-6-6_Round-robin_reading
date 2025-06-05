@@ -31,74 +31,59 @@
 
 % 各セクション
 \section{はじめに}
-\begin{frame}{はじめに}
+
+\begin{frame}{発表論文の概要}
+  \begin{itemize}
+    \item \textbf{タイトル:} A Survey on Federated Learning in Human Sensing
+    \item \textbf{著者:} Mohan Li ほか
+    \item \textbf{出典:} ACM, 2025年1月
+    \item \textbf{内容:} Human Sensing分野におけるFederated Learning（FL）の包括的サーベイ
     \begin{itemize}
-        \item 発表論文の概要
-        \begin{itemize}
-            \item タイトル: A Survey on Federated Learning in Human Sensing
-            \item 著者: Mohan Li, Martin Gjoreski, Pietro Barbiero, Gašper Slapničar, Mitja Luštrek, Nicholas D. Lane, Marc Langheinrich
-            \item 出典: ACM, 2025年1月公開
-            \item 内容: \textbf{Human Sensing分野におけるFederated Learning (FL) の応用}に関する包括的サーベイ。現状、課題、分類、今後の研究方向を提示。
-        \end{itemize}
+      \item 現状、課題、FLの分類、今後の研究方向を整理
     \end{itemize}
+  \end{itemize}
 \end{frame}
 
-
-\begin{frame}{はじめに}
-    \begin{itemize}
-        \item Human Sensingとは
-        \begin{itemize}
-            \item 人の活動、生理/心理状態などを監視し、生活の質向上に貢献
-            \item 以下で進展:
-            \begin{itemize}
-                \item センサ技術の発展
-                \item ウェアラブルデバイスの普及
-            \end{itemize}
-            \item 用いるデータはプライバシで、法や倫理的な懸念が存在
-        \end{itemize}
-        \item プライバシの観点で、FLの応用が考えられる
-    \end{itemize}
+\begin{frame}{Human Sensingとは}
+  \begin{itemize}
+    \item 人の活動や生理・心理状態をセンサで監視し、生活の質向上などに貢献
+    \item センサやウェアラブルデバイス進展により急速に普及
+    \item 収集データは個人情報であり、プライバシーや倫理・法的課題が深刻
+    \item このため\textbf{Federated Learning}によるプライバシー保護が期待される
+  \end{itemize}
 \end{frame}
-
 
 
 \section{本サーベイの貢献と主要ドメイン}
+
 \begin{frame}{本サーベイの貢献}
-    \begin{itemize}
-        \item Human SensingにおけるFLの包括的サーベイ
-        \begin{itemize}
-            \item 既存のFLサーベイはIoTや医療（IoMT）、推薦システムに焦点
-            \item \textbf{本サーベイはHuman Sensingに特化}
-        \end{itemize}
-        \item FLの応用評価のための\textbf{8次元フレームワーク}を提案
-        \begin{itemize}
-            \item プライバシーとセキュリティ、通信コスト、システム異質性
-            \item 統計的異質性、ラベルなしデータ使用、簡略化された実験設定
-            \item サーバ $|$ クライアント最適化FL
-        \end{itemize}
-        \item 応用指向の分類を提示
-    \end{itemize}
+  \begin{itemize}
+    \item Human Sensingに特化したFLサーベイ
+    \item \textbf{8次元フレームワーク}の提案（主要な課題分析）
+      \begin{itemize}
+        \item プライバシー、セキュリティ、通信コスト、システム／統計的異質性など
+      \end{itemize}
+    \item 研究領域ごとの分類・まとめ
+  \end{itemize}
 \end{frame}
 
+
 \begin{frame}{主要な応用ドメイン}
-    \begin{columns}
-        \begin{column}[T]{.6\linewidth}
-            \begin{itemize}
-                \item Human SensingにおけるFLを6つに分類
-                \item \textbf{Activity Recognition (HAR) が最多の分野}
-                \begin{itemize}
-                    \item サーベイ対象論文の\textbf{31.6\%}
-                    \item Well-being (21.4\%)、User Identification (15.3\%)...
-                    \item Interface Development は最少(3.3\%)
-                \end{itemize}
-                \item \textbf{HARは注目される応用先}
-            \end{itemize}
-        \end{column}
-        \begin{column}[T]{.4\linewidth}
-            \includegraphics[scale=0.6]{figures/対象の分野.png}                    
-        \end{column}
-    \end{columns}
-    \end{frame}
+  \begin{columns}
+    \begin{column}[T]{0.65\linewidth}
+      \begin{itemize}
+        \item Human Sensing分野でのFL応用を6分野に分類
+        \item \textbf{Activity Recognition (HAR)} が31.6\%と最多
+        \item Well-being、User Identificationなどが続く
+        \item Interface Developmentは最小（3.3\%）
+        \item \textbf{HAR}は注目分野
+      \end{itemize}
+    \end{column}
+    \begin{column}[T]{0.35\linewidth}
+      \includegraphics[width=\linewidth]{figures/対象の分野.png}
+    \end{column}
+  \end{columns}
+\end{frame}
 
 \begin{frame}{Fig.5}
     \center \includegraphics[scale=0.3]{figures/domain_per.png}                    
@@ -106,229 +91,119 @@
 
 
 \section{Human Activity Recognition (HAR) とは}
+
 \begin{frame}{Human Activity Recognition (HAR) とは}
-    \begin{itemize}
-        \item HARの定義と応用
-        \begin{itemize}
-            \item センサの値から\textbf{人の活動を認識}する問題
-            \item ヘルスケア、スマートホーム、リハビリテーション、転倒検知など
-        \end{itemize}
-        \item 主要なセンサ
-        \begin{itemize}
-            \item \textbf{ウェアラブルセンサ}
-                \begin{itemize}
-                    \item スマートウォッチ、スマートフォン、リストバンド
-                    \item 加速度、ジャイロスコープなど
-                    \item 小型、低コスト、柔軟な装着が可能。
-                \end{itemize}
-            \item \textbf{環境センサ}
-                \begin{itemize}
-                    \item マイク、圧力センサなど
-                    \item ユーザの負担が少ない
-                \end{itemize}
-            \item \textbf{カメラ系}: ビデオや画像、直接的で正確な情報を提供
-        \end{itemize}
-    \end{itemize}
+  \begin{itemize}
+    \item センサデータから人の活動を自動認識する技術
+    \item 応用例：ヘルスケア、スマートホーム、リハビリ、転倒検知
+    \item 主要なセンサ
+      \begin{itemize}
+        \item \textbf{ウェアラブル：} スマートウォッチ・スマホ等（加速度・ジャイロ）
+        \item \textbf{環境：} マイク、圧力センサ等（非装着型）
+        \item \textbf{カメラ：} 高精度だがプライバシー懸念が大きい
+      \end{itemize}
+  \end{itemize}
 \end{frame}
 
-
-\begin{frame}{Human Activity Recognition (HAR) とは}
-    \begin{itemize}
-        \item HARの課題
-        \begin{itemize}
-            \item \textbf{プライバシー懸念}
-                \begin{itemize}
-                    \item カメラの情報量の多さ
-                    \item 中央集権的なデータ
-                    % データ最小限の原則を守れない
-                \end{itemize}
-            \item \textbf{通信コスト}: 大量のデータで負担
-            % \item \textbf{手作業による特徴エンジニアリング}: 従来のML手法ではドメイン知識に依存し、時間と労力がかかる。
-            \item \textbf{限られたデータセット}: プライバシー懸念から大規模な実世界データセットが少ない
-        \end{itemize}
-    \end{itemize}
+\begin{frame}{HARの課題}
+  \begin{itemize}
+    \item \textbf{プライバシー懸念：} カメラや中央集権型データ収集のリスク
+    \item \textbf{通信コスト：} 大量データの転送負担
+    \item \textbf{データセット不足：} プライバシー規制で大規模実験困難
+  \end{itemize}
 \end{frame}
 
 
 
 \section{HARにおけるFLの導入と想定シナリオ}
+
 \begin{frame}{HARにおけるFLの導入}
-    \begin{itemize}
-        \item FLによる課題解決の方向性
-        \begin{itemize}
-            \item \textbf{プライバシー保護}: モデルの更新情報のみを共有
-            \item \textbf{通信コスト削減}: モデル更新情報が生データより小さければ可能
-            \item \textbf{分散型学習}: 一箇所に収集・転送・保存する必要がない
-        \end{itemize}
-        \item HARにおけるFL研究の活発化
-        \begin{itemize}
-            \item サーベイ論文でも多くが集中
-            \item \textbf{現実世界の複雑な課題} (Non-IIDなど)の対応が検討
-        \end{itemize}
-    \end{itemize}
+  \begin{itemize}
+    \item \textbf{プライバシー保護：} モデルパラメータのみ共有し、生データはローカル保持
+    \item \textbf{通信コスト削減：} 軽量なパラメータ通信
+    \item \textbf{分散型：} 中央集権的データ転送が不要
+    \item Nonn-IID（各クライアントのデータ分布が異なる）等の現実課題
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{HAR-FL想定シナリオ：介護施設での見守りシステム}
-    \begin{itemize}
-        \item 目的
-        \begin{itemize}
-            \item 異常を早期に検知し、介護者に通知
-            \item 緊急性の高いイベントを検知
-            \item 特に、転倒、異様な咳き込み、苦痛の声など
-        \end{itemize}
-        \item 背景
-        \begin{itemize}
-            \item 高齢化社会における介護人材不足の深刻化
-            \item 安価で効果的な見守りシステムの需要
-        \end{itemize}
-    \end{itemize}
+\begin{frame}{介護施設での見守りシステム：シナリオ}
+  \begin{itemize}
+    \item \textbf{目的：} 異常（転倒・咳込み・苦痛など）の早期検知・通知
+    \item \textbf{背景：} 高齢化＆介護人材不足、安価＆高精度なシステム需要
+    \item \textbf{技術構成：}
+      \begin{itemize}
+        \item 音響HAR：各部屋IoTマイクで環境音取得・分類
+        \item 行動認識：時系列・音響イベントから状態判断
+        \item Federated Learning：部屋ごとローカル学習＋全体モデル更新
+      \end{itemize}
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{HAR-FL想定シナリオ：介護施設での見守りシステム}
-    \begin{itemize}
-        \item 使用技術
-        \begin{itemize}
-            \item \textbf{音によるHAR}
-            \begin{itemize}
-                \item 各部屋のIoTデバイスで環境音を収集
-                \item 音響イベントを検出
-            \end{itemize}
-            \item \textbf{行動認識}
-            \begin{itemize}
-                \item 利用者の行動（転倒、呼吸困難など）を判断
-                \item 音響イベントや、時系列などの傾向が材料
-            \end{itemize}
-            \item \textbf{Federated Learning (FL)}
-            \begin{itemize}
-                \item 各部屋のIoTデバイスがクライアント
-                % \item モデルを学習・更新
-            \end{itemize}
-        \end{itemize}
-    \end{itemize}
-\end{frame}
-
-
-
-\begin{frame}{HAR-FL想定シナリオ：介護施設での見守りシステム}
-    \begin{itemize}
-        \item FL導入の利点
-        \begin{itemize}
-            \item プライバシー保護
-            \begin{itemize}
-                \item 生データを部屋内で処理
-                \item 漏洩リスクを低減
-            \end{itemize}
-            \item{パーソナル化}
-            \begin{itemize}
-                \item 各部屋の環境や利用者の生活パターンに合わせた
-                \item モデルを学習し、精度向上。
-            \end{itemize}
-            % \item {スケーラビリティ}: クライアント（部屋）が増えても対応しやすい分散学習。
-            % ..?ここは微妙
-        \end{itemize}
-    \end{itemize}
+\begin{frame}{FL導入の利点（介護シナリオ）}
+  \begin{itemize}
+    \item \textbf{プライバシー保護：} 生音声は部屋内ローカルでのみ処理
+    \item \textbf{パーソナル化：} 利用者/部屋ごとのモデル最適化が可能
+  \end{itemize}
 \end{frame}
 
 
 \begin{frame}{想定される課題と検討}
-    \begin{itemize}
-        \item \textbf{緊急性の高いイベントデータの収集とアノテーション}:
-        \begin{itemize}
-            \item これらのデータは稀で、収集・準備に課題。
-            \item オープンデータ（SAFE, DESED, AudioSetなど）の活用や合成データ生成などの検討。
-        \end{itemize}
-        \item \textbf{データ異質性 (Non-IID)}:
-        \begin{itemize}
-            \item 部屋ごと、利用者ごとに発生する音響イベントの種類や頻度、音響特性が異なる。
-            \item クライアントごとのデータ分布のばらつきに対応が必要。
-        \end{itemize}
-        \item \textbf{クライアントの異質性}:
-        \begin{itemize}
-            \item IoTデバイスの計算能力、メモリ、接続性などが異なる 
-            % 従来はそう 統一すれば一旦無視できるはず
-            \item 軽量なモデルや連合分割学習(FSL)などが有効。
-        \end{itemize}
-    \end{itemize}
+  \begin{itemize}
+    \item \textbf{緊急イベントのデータ不足：} 稀なため収集困難
+      \begin{itemize}
+        \item Openデータや合成データで対応
+      \end{itemize}
+    \item \textbf{データ異質性（Non-IID）：} 部屋・利用者ごとに環境・頻度が違う
+    \item \textbf{クライアント異質性：} デバイス能力差あり → 軽量モデルや部分学習で対応
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{想定される課題と検討事項}
-    \begin{itemize}
-        \item \textbf{リアルタイム性能}:
-        \begin{itemize}
-            \item 異常検知には即時性が大切
-            \item FLの学習・推論プロセス全体のレイテンシ検討
-        \end{itemize}
-        \item \textbf{モデルの汎化}:
-        \begin{itemize}
-            \item 特定の環境で学習したモデルが、別の部屋や新規利用者に適用できるか
-            \item メタ学習や表現学習を用いたアプローチが有望
-        \end{itemize}
-    \end{itemize}
+\begin{frame}{さらなる課題}
+  \begin{itemize}
+    \item \textbf{リアルタイム性：} 異常検知は即時対応が必要、通信・推論レイテンシを考慮
+    \item \textbf{モデル汎化性能：} 新規利用者・環境にも適用可能か（メタラーニング、表現学習）
+  \end{itemize}
 \end{frame}
-
 
 
 \section{HAR-FLの主要課題とFLの対応（サーベイより）}
-\begin{frame}{HAR-FLにおける主要な課題とFLの対応}
-    \begin{itemize}
-        \item \textbf{データ異質性 (Non-IID)}
-        \begin{itemize}
-            \item 課題: クライアント間で活動タイプやセンサーデータ（信号分布）に大きな偏りがある。従来のFedAvgでは性能が劣化しやすい。
-            \item FLによる対応例: \textbf{パーソナル化FL (pFL)} (Meta-HAR 、FedDL )、クラスタリング 、知識蒸留 。
-        \end{itemize}
-        \item \textbf{限られたラベルデータ/ラベルなしデータ}
-        \begin{itemize}
-            \item 課題: ラベル付けのコストや希少なイベントのため、十分なラベル付きデータがない。
-            \item FLによる対応例: \textbf{半教師あり学習} 、教師なし学習 、自己教師あり学習 。
-        \end{itemize}
-        \item \textbf{通信コスト}
-        \begin{itemize}
-            \item 課題: エッジデバイスの帯域幅やバッテリーの制約。
-            \item FLによる対応例: \textbf{動的レイヤー共有 (FedDL)} 、モデル圧縮・量子化 。
-        \end{itemize}
-    \end{itemize}
-\end{frame}
 
-\begin{frame}{HAR-FLにおける主要な課題とFLの対応 (続き)}
-    \begin{itemize}
-        \item \textbf{プライバシー/セキュリティ}
-        \begin{itemize}
-            \item 課題: FLでも勾配からの情報漏洩やポイズニング攻撃などのリスク。
-            \item FLによる対応例: \textbf{差分プライバシー (DP)} 、\textbf{セキュアアグリゲーション} 、クライアントフィルタリング 、連合分割学習(FSL)。
-        \end{itemize}
-        \item \textbf{システム異質性}
-        \begin{itemize}
-            \item 課題: クライアントデバイスの計算能力、メモリ、接続性などが異なる。
-            \item FLによる対応例: リソースアウェアなクライアント選択や学習手法。
-        \end{itemize}
-    \end{itemize}
+\begin{frame}{主要な課題とFLの対応}
+  \begin{itemize}
+    \item \textbf{データ異質性（Non-IID）}：
+      \begin{itemize}
+        \item 従来のFedAvgは性能劣化
+        \item \textbf{パーソナル化FL}、クラスタリング、知識蒸留等で対応
+      \end{itemize}
+    \item \textbf{ラベルデータ不足}：
+      \begin{itemize}
+        \item 半教師ありFL・自己教師あり学習で対応
+      \end{itemize}
+    \item \textbf{通信コスト}：
+      \begin{itemize}
+        \item モデル圧縮・FedDL（動的レイヤー共有）ほか
+      \end{itemize}
+    \item \textbf{プライバシー/セキュリティ}：DP・セキュアアグリゲーション
+    \item \textbf{システム異質性}：リソースアウェアな手法
+  \end{itemize}
 \end{frame}
 
 \section{まとめ}
-\begin{frame}{まとめ}
-    \begin{itemize}
-        \item Human Sensingは\textbf{データプライバシが課題}
-        \item Federated Learningは\textbf{解決策}として有望
-        \item Human Activity Recognition (HAR) 分野は、FLの応用が活発
-    \end{itemize}
-\end{frame}
 
 \begin{frame}{まとめ}
-    \begin{itemize}
-        \item \textbf{介護施設での見守りシステム}のシナリオでHAR-FLは
-        \begin{itemize}
-            \item プライバシーを保護しつつ
-            \item \textbf{利用者個人に合わせた高精度な異常検知}の可能性
-        \end{itemize}
-        \item 展望
-        \begin{itemize}
-            \item より現実的な条件下での性能評価
-            \item 多様なモダリティの統合
-            \item プライバシ保護技術の発展
-            \item HAR-FLの\textbf{社会実装を加速}させることが期待される。
-        \end{itemize}
-    \end{itemize}
+  \begin{itemize}
+    \item Human Sensingの普及には\textbf{データプライバシー課題}が障害
+    \item Federated Learningはその解決策として有望
+    \item HARはFL応用が特に活発な分野
+  \end{itemize}
 \end{frame}
 
+\begin{frame}{今後の展望}
+  \begin{itemize}
+    \item 介護施設等での\textbf{プライバシ保護＋高精度異常検知}の社会実装が期待
+    \item 複数モダリティ統合、現場実験、プライバシー技術の進展
+    \item HAR-FLのさらなる研究と社会実装に注目
+  \end{itemize}
+\end{frame}
 
 \end{document}
